@@ -1,52 +1,43 @@
 import db from "./firebase_config";
-import { 
-    doc, 
-    collection, 
-    addDoc, 
-    getDocs, 
-    getDoc,
-    updateDoc, 
-    deleteDoc 
+import {
+    doc,
+    collection,
+    addDoc,
+    getDocs,
+    updateDoc,
+    deleteDoc,
+    query,
+    where
 } from "firebase/firestore";
 
-/* ================= USERS ================= */
+/* ================= AUTH (SIMPLE LOGIN) ================= */
 
-// Create User
-const createUser = async (user) => {
+const login = async (name, password) => {
     try {
-        const docRef = await addDoc(collection(db, "users"), user);
-        return docRef.id;
-    } catch (e) {
-        console.error("Error creating user:", e);
-    }
-};
+        const q = query(
+            collection(db, "users"),
+            where("name", "==", name),
+            where("password", "==", password)
+        );
 
-// Get All Users
-const getUsers = async () => {
-    try {
-        const snapshot = await getDocs(collection(db, "users"));
-        return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    } catch (e) {
-        console.error("Error fetching users:", e);
-    }
-};
+        const snapshot = await getDocs(q);
 
-// Update User
-const updateUser = async (id, data) => {
-    try {
-        const ref = doc(db, "users", id);
-        await updateDoc(ref, data);
-    } catch (e) {
-        console.error("Error updating user:", e);
-    }
-};
+        if (!snapshot.empty) {
+            const user = snapshot.docs[0];
+            return {
+                success: true,
+                user: { id: user.id, ...user.data() }
+            };
+        } else {
+            return {
+                success: false,
+                message: "Invalid name or password"
+            };
+        }
 
-// Delete User
-const deleteUser = async (id) => {
-    try {
-        await deleteDoc(doc(db, "users", id));
     } catch (e) {
-        console.error("Error deleting user:", e);
+        console.error("Login error:", e);
+        return { success: false };
     }
 };
 
@@ -65,7 +56,10 @@ const createMeal = async (meal) => {
 const getMeals = async () => {
     try {
         const snapshot = await getDocs(collection(db, "meals"));
-        return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        return snapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+        }));
     } catch (e) {
         console.error("Error fetching meals:", e);
     }
@@ -105,7 +99,10 @@ const createOrder = async (order) => {
 const getOrders = async () => {
     try {
         const snapshot = await getDocs(collection(db, "orders"));
-        return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        return snapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+        }));
     } catch (e) {
         console.error("Error fetching orders:", e);
     }
@@ -130,7 +127,6 @@ const deleteOrder = async (id) => {
 
 /* ================= ORDER ITEMS ================= */
 
-// Create Order Item
 const createOrderItem = async (item) => {
     try {
         const docRef = await addDoc(collection(db, "order_items"), item);
@@ -140,15 +136,19 @@ const createOrderItem = async (item) => {
     }
 };
 
-// Get Items by Order ID
 const getOrderItemsByOrder = async (orderId) => {
     try {
-        const snapshot = await getDocs(collection(db, "order_items"));
-        
-        // filter manually (Firestore simple version)
-        return snapshot.docs
-            .map(doc => ({ id: doc.id, ...doc.data() }))
-            .filter(item => item.order_id === orderId);
+        const q = query(
+            collection(db, "order_items"),
+            where("order_id", "==", orderId)
+        );
+
+        const snapshot = await getDocs(q);
+
+        return snapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+        }));
 
     } catch (e) {
         console.error("Error fetching order items:", e);
@@ -175,11 +175,8 @@ const deleteOrderItem = async (id) => {
 /* ================= EXPORT ================= */
 
 export default {
-    // Users
-    createUser,
-    getUsers,
-    updateUser,
-    deleteUser,
+    // Auth
+    login,
 
     // Meals
     createMeal,
