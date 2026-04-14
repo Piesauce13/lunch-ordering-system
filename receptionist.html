@@ -5,275 +5,411 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Receptionist — Lunch Queue</title>
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:       #0f1117;
-      --surface:  #1a1d27;
-      --border:   #2a2d3a;
-      --accent:   #f97316;
-      --accent2:  #fb923c;
-      --text:     #e8eaf0;
-      --muted:    #6b7080;
-      --success:  #22c55e;
-      --error:    #ef4444;
-      --info:     #3b82f6;
-      --radius:   12px;
+      --bg: #efede4;
+      --surface: #e6e3d9;
+      --surface-soft: #ece9df;
+      --card: #f6f5f1;
+      --line: #d9d5ca;
+      --text: #374737;
+      --muted: #7a7f72;
+      --accent: #3f5c37;
+      --accent-2: #a84a1f;
+      --success: #2f7d42;
+      --error: #be3b2c;
+      --info: #3a6ea8;
+      --radius: 18px;
+      --shadow: 0 8px 24px rgba(54, 65, 52, 0.08);
     }
 
     body {
-      font-family: 'Segoe UI', sans-serif;
       background: var(--bg);
       color: var(--text);
+      font-family: "Segoe UI", sans-serif;
       min-height: 100vh;
-      padding: 24px 16px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      z-index: -1;
+      border-radius: 50%;
+      pointer-events: none;
+      filter: blur(2px);
+    }
+
+    body::before {
+      width: 380px;
+      height: 380px;
+      top: -140px;
+      right: -90px;
+      background: radial-gradient(circle at center, rgba(113, 140, 100, 0.22), rgba(113, 140, 100, 0));
+    }
+
+    body::after {
+      width: 320px;
+      height: 320px;
+      left: -120px;
+      bottom: -100px;
+      background: radial-gradient(circle at center, rgba(206, 129, 82, 0.2), rgba(206, 129, 82, 0));
+    }
+
+    .page {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 22px 20px 28px;
+      animation: fade-in 0.5s ease-out;
     }
 
     header {
-      max-width: 1100px;
-      margin: 0 auto 32px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 20px;
-    }
-
-    header .logo {
-      width: 40px; height: 40px;
-      background: var(--accent);
-      border-radius: 10px;
-      display: grid; place-items: center;
-      font-size: 20px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 14px;
+      margin-bottom: 22px;
     }
 
     header h1 {
-      font-size: 1.4rem;
+      font-family: Georgia, "Times New Roman", serif;
       font-weight: 700;
-      letter-spacing: -0.3px;
+      font-size: 2rem;
+      line-height: 1;
+      color: #3e5139;
     }
 
     header span {
-      font-size: 0.85rem;
+      display: inline-block;
+      margin-top: 6px;
+      text-transform: uppercase;
+      letter-spacing: 1.4px;
+      font-size: 0.73rem;
       color: var(--muted);
-      margin-left: auto;
     }
 
     .layout {
-      max-width: 1100px;
-      margin: 0 auto;
       display: grid;
-      grid-template-columns: 1fr 360px;
-      gap: 24px;
+      grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);
+      gap: 22px;
       align-items: start;
     }
 
-    @media (max-width: 768px) {
-      .layout { grid-template-columns: 1fr; }
-    }
-
-    /* ── Left Panel ── */
     .panel {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 24px;
+      background: transparent;
     }
 
     .panel h2 {
-      font-size: 1rem;
-      font-weight: 600;
-      margin-bottom: 16px;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      font-size: 0.75rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 2rem;
+      color: #485f42;
+      margin-bottom: 14px;
+      position: relative;
+      display: inline-block;
+      line-height: 1;
+    }
+
+    .panel h2::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -8px;
+      width: 34px;
+      height: 3px;
+      border-radius: 99px;
+      background: #de7138;
+    }
+
+    .search-wrap {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 14px;
+      margin: 10px 0 20px;
+      border: 1px solid rgba(95, 112, 86, 0.08);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45);
     }
 
     .search-row {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 16px;
+      display: grid;
+      grid-template-columns: minmax(130px, 1fr) minmax(140px, 1.45fr) auto;
+      gap: 10px;
+      align-items: center;
     }
 
-    select, input[type="text"], input[type="number"], textarea {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      color: var(--text);
-      border-radius: 8px;
-      padding: 10px 14px;
+    select,
+    input[type="text"],
+    input[type="number"],
+    textarea {
+      width: 100%;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      background: #f8f8f6;
+      padding: 12px 14px;
+      color: #49564a;
       font-size: 0.9rem;
       outline: none;
-      transition: border-color 0.2s;
-      width: 100%;
+      transition: border-color 0.2s, box-shadow 0.2s;
     }
 
-    select:focus, input:focus, textarea:focus {
-      border-color: var(--accent);
+    select {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      padding-right: 44px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23566354' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      background-size: 14px;
     }
 
-    select option { background: var(--surface); }
+    textarea {
+      border-radius: 14px;
+      min-height: 96px;
+      resize: vertical;
+      padding: 12px;
+    }
+
+    select:focus,
+    input:focus,
+    textarea:focus {
+      border-color: #7d916f;
+      box-shadow: 0 0 0 3px rgba(125, 145, 111, 0.16);
+    }
 
     button {
-      cursor: pointer;
       border: none;
-      border-radius: 8px;
-      font-size: 0.9rem;
+      cursor: pointer;
       font-weight: 600;
-      transition: opacity 0.2s, transform 0.1s;
+      transition: transform 0.12s, filter 0.2s;
     }
 
-    button:active { transform: scale(0.97); }
-    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    button:active { transform: scale(0.98); }
+    button:disabled { opacity: 0.6; cursor: not-allowed; }
 
     .btn-primary {
       background: var(--accent);
       color: #fff;
-      padding: 10px 20px;
-      white-space: nowrap;
+      padding: 12px 22px;
+      border-radius: 999px;
+      min-width: 102px;
+      font-size: 0.94rem;
+      box-shadow: 0 8px 18px rgba(63, 92, 55, 0.2);
     }
 
-    .btn-primary:hover:not(:disabled) { background: var(--accent2); }
+    .btn-primary:hover:not(:disabled) { filter: brightness(1.08); }
 
-    .divider {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin: 16px 0;
-      color: var(--muted);
-      font-size: 0.8rem;
-    }
-
-    .divider::before, .divider::after {
-      content: "";
-      flex: 1;
-      height: 1px;
-      background: var(--border);
-    }
-
-    /* ── Meal Grid ── */
     #mealGrid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-      gap: 12px;
-      margin-top: 4px;
-      max-height: 460px;
+      grid-template-columns: repeat(3, minmax(150px, 1fr));
+      gap: 14px;
+      max-height: 548px;
       overflow-y: auto;
-      padding-right: 4px;
+      padding-right: 2px;
     }
 
-    #mealGrid::-webkit-scrollbar { width: 4px; }
+    #mealGrid::-webkit-scrollbar { width: 6px; }
     #mealGrid::-webkit-scrollbar-track { background: transparent; }
-    #mealGrid::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+    #mealGrid::-webkit-scrollbar-thumb { background: #cbc6b8; border-radius: 99px; }
 
     .meal-card {
-      background: var(--bg);
-      border: 2px solid var(--border);
-      border-radius: 10px;
+      background: var(--card);
+      border: 2px solid transparent;
+      border-radius: 16px;
       overflow: hidden;
+      box-shadow: var(--shadow);
       cursor: pointer;
-      transition: border-color 0.2s, transform 0.15s;
+      transition: transform 0.16s, border-color 0.18s, box-shadow 0.2s;
+      animation: card-enter 0.4s ease-out both;
     }
 
-    .meal-card:hover { border-color: var(--accent); transform: translateY(-2px); }
-    .meal-card.selected { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(249,115,22,0.2); }
+    .meal-card:hover {
+      transform: translateY(-3px);
+      border-color: #b5c1aa;
+      box-shadow: 0 12px 28px rgba(54, 65, 52, 0.14);
+    }
+
+    .meal-card.selected {
+      border-color: #6c8962;
+      box-shadow: 0 0 0 4px rgba(108, 137, 98, 0.14);
+    }
 
     .meal-card img {
-      width: 100%;
-      aspect-ratio: 1;
-      object-fit: cover;
       display: block;
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+      transition: transform 0.35s ease;
+    }
+
+    .meal-card:hover img {
+      transform: scale(1.04);
     }
 
     .meal-card p {
-      font-size: 0.75rem;
-      padding: 8px;
-      text-align: center;
-      line-height: 1.3;
-      color: var(--text);
+      padding: 12px;
+      color: #2f3f2f;
+      font-size: 1rem;
+      line-height: 1.35;
+      font-family: Georgia, "Times New Roman", serif;
+      min-height: 72px;
+      text-wrap: balance;
     }
+
+    .meal-card:nth-child(2n) { animation-delay: 0.03s; }
+    .meal-card:nth-child(3n) { animation-delay: 0.06s; }
+    .meal-card:nth-child(4n) { animation-delay: 0.09s; }
 
     .no-results {
-      color: var(--muted);
-      font-size: 0.9rem;
       grid-column: 1 / -1;
       text-align: center;
-      padding: 32px 0;
+      color: var(--muted);
+      padding: 30px 0;
     }
 
-    /* ── Right Panel (Order Form) ── */
+    .order-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 16px;
+      border: 1px solid rgba(90, 102, 84, 0.1);
+      box-shadow: 0 16px 30px rgba(63, 78, 58, 0.08);
+    }
+
     .meal-preview {
+      background: var(--card);
+      border-radius: 14px;
+      padding: 10px;
       display: flex;
+      gap: 10px;
       align-items: center;
-      gap: 12px;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 12px;
-      margin-bottom: 20px;
+      margin-bottom: 18px;
+      border: 1px solid rgba(87, 102, 80, 0.12);
     }
 
     #selectedMealImg {
-      width: 56px; height: 56px;
-      border-radius: 8px;
+      width: 64px;
+      height: 64px;
+      border-radius: 10px;
       object-fit: cover;
-      background: var(--border);
+      background: #d3d5cc;
       flex-shrink: 0;
     }
 
     .meal-preview-info small {
-      font-size: 0.7rem;
-      color: var(--muted);
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 1px;
+      color: #8a8d82;
+      font-size: 0.68rem;
+      display: block;
+      margin-bottom: 4px;
     }
 
     #selectedMealName {
-      font-size: 0.95rem;
-      font-weight: 600;
-      margin-top: 2px;
-      color: var(--accent);
+      font-family: Georgia, "Times New Roman", serif;
+      font-weight: 700;
+      color: #2f3f2f;
+      line-height: 1.2;
+      font-size: 1rem;
+      margin-bottom: 3px;
+    }
+
+    .meal-preview-note {
+      font-size: 0.8rem;
+      color: #6f766c;
     }
 
     .form-group {
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
 
     .form-group label {
       display: block;
-      font-size: 0.78rem;
-      color: var(--muted);
       margin-bottom: 6px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+      color: #556354;
+      font-size: 0.8rem;
+      font-weight: 600;
     }
-
-    textarea { resize: vertical; min-height: 72px; }
 
     #submitBtn {
       width: 100%;
-      padding: 13px;
-      font-size: 1rem;
-      border-radius: 10px;
-      margin-top: 4px;
+      border-radius: 14px;
+      padding: 13px 20px;
+      font-size: 1.05rem;
+      background: var(--accent-2);
+      margin-top: 8px;
+      box-shadow: 0 9px 20px rgba(151, 69, 32, 0.26);
     }
 
-    /* ── Toast ── */
+    .order-note {
+      margin-top: 12px;
+      font-size: 0.74rem;
+      color: #7a7f72;
+      text-align: center;
+      line-height: 1.45;
+    }
+
+    .queue-card {
+      margin-top: 14px;
+      background: var(--surface-soft);
+      border-radius: 14px;
+      padding: 12px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      color: #4f5e4c;
+      font-size: 0.82rem;
+      line-height: 1.45;
+    }
+
+    .queue-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: rgba(63, 92, 55, 0.12);
+      color: #3f5c37;
+      display: grid;
+      place-items: center;
+      font-size: 0.72rem;
+      margin-top: 1px;
+      flex-shrink: 0;
+      animation: pulse-dot 1.8s infinite;
+    }
+
+    footer {
+      border-top: 1px solid var(--line);
+      margin-top: 34px;
+      padding-top: 18px;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 0.72rem;
+      letter-spacing: 0.2px;
+    }
+
+    footer strong {
+      color: #4b5c45;
+      font-family: Georgia, "Times New Roman", serif;
+      display: block;
+      font-size: 1.8rem;
+      margin-bottom: 2px;
+    }
+
     #toast {
       position: fixed;
-      bottom: 24px;
+      bottom: 18px;
       left: 50%;
-      transform: translateX(-50%) translateY(80px);
-      background: var(--surface);
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 12px 24px;
-      border-radius: 40px;
-      font-size: 0.9rem;
-      font-weight: 500;
+      transform: translateX(-50%) translateY(60px);
       opacity: 0;
-      transition: transform 0.3s, opacity 0.3s;
+      transition: transform 0.25s, opacity 0.25s;
       z-index: 999;
+      background: #f8f6f0;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      box-shadow: var(--shadow);
+      color: #40523d;
+      padding: 10px 18px;
+      font-size: 0.9rem;
       white-space: nowrap;
     }
 
@@ -282,16 +418,15 @@
       opacity: 1;
     }
 
-    #toast.toast-success { border-color: var(--success); color: var(--success); }
-    #toast.toast-error   { border-color: var(--error);   color: var(--error);   }
-    #toast.toast-info    { border-color: var(--info);     color: var(--info);    }
+    #toast.toast-success { border-color: rgba(47, 125, 66, 0.5); color: var(--success); }
+    #toast.toast-error { border-color: rgba(190, 59, 44, 0.5); color: var(--error); }
+    #toast.toast-info { border-color: rgba(58, 110, 168, 0.5); color: var(--info); }
 
-    /* ── Spinner ── */
     #spinner {
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(15,17,23,0.6);
+      background: rgba(51, 61, 50, 0.2);
       backdrop-filter: blur(2px);
       z-index: 998;
       place-items: center;
@@ -300,90 +435,132 @@
     #spinner.show { display: grid; }
 
     .spinner-ring {
-      width: 40px; height: 40px;
-      border: 3px solid var(--border);
-      border-top-color: var(--accent);
+      width: 42px;
+      height: 42px;
       border-radius: 50%;
+      border: 4px solid #d4d6cc;
+      border-top-color: #546f4d;
       animation: spin 0.7s linear infinite;
     }
 
+    @keyframes fade-in {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes card-enter {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(63, 92, 55, 0.3); }
+      50% { box-shadow: 0 0 0 7px rgba(63, 92, 55, 0); }
+    }
+
     @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+
+    @media (max-width: 1024px) {
+      #mealGrid { grid-template-columns: repeat(2, minmax(140px, 1fr)); }
+    }
+
+    @media (max-width: 860px) {
+      .layout { grid-template-columns: 1fr; }
+      .panel h2 { font-size: 1.8rem; }
+      .search-row { grid-template-columns: 1fr; }
+      .btn-primary,
+      #submitBtn { width: 100%; }
+      #mealGrid { max-height: none; }
+      footer { flex-direction: column; }
+    }
   </style>
 </head>
 <body>
+  <div class="page">
+    <header>
+      <h1>Lunch Queue</h1>
+      <span>Receptionist Panel</span>
+    </header>
 
-  <header>
-    <div class="logo">🍽</div>
-    <h1>Lunch Queue</h1>
-    <span>Receptionist Panel</span>
-  </header>
+    <div class="layout">
+      <section class="panel">
+        <h2>Browse Menu</h2>
 
-  <div class="layout">
+        <div class="search-wrap">
+          <div class="search-row">
+            <select id="categorySelect">
+              <option value="">All Categories</option>
+            </select>
+            <input type="text" id="searchInput" placeholder="Search for a meal..." />
+            <button class="btn-primary" id="searchBtn">Search</button>
+          </div>
+        </div>
 
-    <!-- Left: Menu Browser -->
-    <div class="panel">
-      <h2>Browse Menu</h2>
+        <div id="mealGrid"></div>
+      </section>
 
-      <!-- Category dropdown -->
-      <select id="categorySelect">
-        <option value="">-- Select Category --</option>
-      </select>
+      <aside class="panel">
+        <h2>Place Order</h2>
 
-      <div class="divider">or search</div>
+        <div class="order-card">
+          <div class="meal-preview">
+            <img id="selectedMealImg" src="" alt="selected meal" />
+            <div class="meal-preview-info">
+              <small>Selected Meal</small>
+              <div id="selectedMealName">None</div>
+              <div class="meal-preview-note">Pick an item from the menu</div>
+            </div>
+          </div>
 
-      <!-- Search bar -->
-      <div class="search-row">
-        <input type="text" id="searchInput" placeholder="Search meals..." />
-        <button class="btn-primary" id="searchBtn">Search</button>
-      </div>
+          <form id="orderForm">
+            <div class="form-group">
+              <label for="employeeName">Employee Name</label>
+              <input type="text" id="employeeName" placeholder="Enter full name" required />
+            </div>
 
-      <!-- Meal cards -->
-      <div id="mealGrid"></div>
+            <div class="form-group">
+              <label for="quantity">Quantity</label>
+              <input type="number" id="quantity" value="1" min="1" max="20" required />
+            </div>
+
+            <div class="form-group">
+              <label for="notes">Notes (optional)</label>
+              <textarea id="notes" placeholder="Any dietary restrictions or preferences..."></textarea>
+            </div>
+
+            <button type="submit" class="btn-primary" id="submitBtn">Place Order</button>
+            <p class="order-note">Orders placed before 10:30 AM will be fulfilled for today's lunch service.</p>
+          </form>
+        </div>
+
+        <div class="queue-card">
+          <div class="queue-dot">i</div>
+          <div>
+            <strong>Queue Status</strong><br />
+            Estimated wait time for current orders is 12 minutes. Kitchen is operating at normal capacity.
+          </div>
+        </div>
+      </aside>
     </div>
 
-    <!-- Right: Order Form -->
-    <div class="panel">
-      <h2>Place Order</h2>
-
-      <!-- Selected meal preview -->
-      <div class="meal-preview">
-        <img id="selectedMealImg" src="" alt="meal" />
-        <div class="meal-preview-info">
-          <small>Selected Meal</small>
-          <div id="selectedMealName">None</div>
-        </div>
+    <footer>
+      <div>
+        <strong>Lunch Queue</strong>
+        Handcrafted for modern workspaces
       </div>
-
-      <!-- Order form -->
-      <form id="orderForm">
-        <div class="form-group">
-          <label for="employeeName">Employee Name</label>
-          <input type="text" id="employeeName" placeholder="e.g. Sokvisoth" required />
-        </div>
-
-        <div class="form-group">
-          <label for="quantity">Quantity</label>
-          <input type="number" id="quantity" value="1" min="1" max="20" required />
-        </div>
-
-        <div class="form-group">
-          <label for="notes">Notes (optional)</label>
-          <textarea id="notes" placeholder="e.g. No spicy, extra rice..."></textarea>
-        </div>
-
-        <button type="submit" class="btn-primary" id="submitBtn">Place Order</button>
-      </form>
-    </div>
-
+      <div>© 2026 Lunch Queue. All rights reserved.</div>
+    </footer>
   </div>
 
-  <!-- Toast notification -->
   <div id="toast"></div>
-
-  <!-- Spinner overlay -->
   <div id="spinner"><div class="spinner-ring"></div></div>
-
-  <!-- Entry point — type="module" required for ES imports -->
   <script type="module" src="js/receptionist.js"></script>
 
 </body>
