@@ -1,14 +1,8 @@
-import db from "./firebase_config";
+import db from "./firebase_config.js";
 import {
-    doc,
-    collection,
-    addDoc,
-    getDocs,
-    updateDoc,
-    deleteDoc,
-    query,
-    where
-} from "firebase/firestore";
+    doc, collection, addDoc, getDocs,
+    updateDoc, deleteDoc, query, where
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 /* ================= AUTH (SIMPLE LOGIN) ================= */
 
