@@ -1,0 +1,348 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #efede4;
+  --surface: #e6e3d9;
+  --surface-soft: #ece9df;
+  --card: #f6f5f1;
+  --line: #d9d5ca;
+  --text: #374737;
+  --muted: #7a7f72;
+  --accent: #3f5c37;
+  --accent-2: #a84a1f;
+  --success: #2f7d42;
+  --error: #be3b2c;
+  --info: #3a6ea8;
+  --radius: 18px;
+  --shadow: 0 8px 24px rgba(54, 65, 52, 0.08);
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Segoe UI", sans-serif;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  z-index: -1;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(2px);
+}
+
+body::before {
+  width: 380px;
+  height: 380px;
+  top: -140px;
+  right: -90px;
+  background: radial-gradient(circle at center, rgba(113, 140, 100, 0.22), rgba(113, 140, 100, 0));
+}
+
+body::after {
+  width: 320px;
+  height: 320px;
+  left: -120px;
+  bottom: -100px;
+  background: radial-gradient(circle at center, rgba(206, 129, 82, 0.2), rgba(206, 129, 82, 0));
+}
+
+.page {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 22px 20px 28px;
+  animation: fade-in 0.5s ease-out;
+}
+
+header {
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 14px;
+  margin-bottom: 22px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+header h1 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 700;
+  font-size: 2rem;
+  line-height: 1;
+  color: #3e5139;
+}
+
+header span.subtitle {
+  display: inline-block;
+  margin-top: 6px;
+  text-transform: uppercase;
+  letter-spacing: 1.4px;
+  font-size: 0.73rem;
+  color: var(--muted);
+}
+
+.kitchen-stats {
+  display: flex;
+  gap: 24px;
+  background: var(--surface);
+  padding: 10px 24px;
+  border-radius: 999px;
+  border: 1px solid rgba(95, 112, 86, 0.08);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+
+.stat-item {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.stat-value {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: var(--accent-2);
+  line-height: 1.2;
+}
+
+.stat-value.done {
+  color: var(--success);
+}
+
+.panel {
+  background: transparent;
+  margin-bottom: 30px;
+}
+
+.panel h2 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 2rem;
+  color: #485f42;
+  margin-bottom: 24px;
+  position: relative;
+  display: inline-block;
+  line-height: 1;
+}
+
+.panel h2::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -8px;
+  width: 34px;
+  height: 3px;
+  border-radius: 99px;
+  background: #de7138;
+}
+
+/* Order Grid for Kitchen */
+.order-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+}
+
+.kitchen-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 18px;
+  border: 1px solid rgba(90, 102, 84, 0.1);
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  animation: card-enter 0.4s ease-out both;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.kitchen-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(54, 65, 52, 0.12);
+}
+
+.kitchen-card:nth-child(2n) { animation-delay: 0.04s; }
+.kitchen-card:nth-child(3n) { animation-delay: 0.08s; }
+.kitchen-card:nth-child(4n) { animation-delay: 0.12s; }
+
+.kitchen-card-header {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  padding-bottom: 14px;
+  border-bottom: 1px dashed var(--line);
+}
+
+.kitchen-card-img {
+  width: 72px;
+  height: 72px;
+  border-radius: 12px;
+  object-fit: cover;
+  background: #d3d5cc;
+  flex-shrink: 0;
+}
+
+.kitchen-card-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.kitchen-card-title {
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 700;
+  color: #2f3f2f;
+  font-size: 1.1rem;
+  line-height: 1.25;
+  margin-bottom: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.qty-badge {
+  background: var(--accent-2);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: bold;
+  padding: 3px 10px;
+  border-radius: 99px;
+  display: inline-block;
+}
+
+.kitchen-card-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.employee-name {
+  font-weight: 600;
+  color: #49564a;
+  margin-bottom: 4px;
+  font-size: 0.95rem;
+}
+
+.order-time {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.special-notes {
+  background: #fbf0ee;
+  border: 1px solid rgba(190, 59, 44, 0.2);
+  padding: 12px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  color: #8c2a1f;
+  line-height: 1.45;
+  margin-bottom: 16px;
+  flex: 1;
+}
+
+.special-notes strong {
+  display: block;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+  color: var(--error);
+}
+
+.no-notes {
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-style: italic;
+  text-align: center;
+  padding: 12px;
+  background: var(--surface-soft);
+  border-radius: 12px;
+  margin-bottom: 16px;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+button {
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: transform 0.12s, filter 0.2s;
+  font-family: "Segoe UI", sans-serif;
+}
+button:active { transform: scale(0.98); }
+
+.btn-complete {
+  width: 100%;
+  background: var(--success);
+  color: white;
+  padding: 14px;
+  border-radius: 14px;
+  font-size: 1rem;
+  box-shadow: 0 8px 18px rgba(47, 125, 66, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.btn-complete:hover {
+  filter: brightness(1.08);
+}
+
+footer {
+  border-top: 1px solid var(--line);
+  margin-top: 34px;
+  padding-top: 18px;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  color: var(--muted);
+  font-size: 0.72rem;
+  letter-spacing: 0.2px;
+}
+
+footer strong {
+  color: #4b5c45;
+  font-family: Georgia, "Times New Roman", serif;
+  display: block;
+  font-size: 1.8rem;
+  margin-bottom: 2px;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes card-enter {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 860px) {
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .kitchen-stats {
+    width: 100%;
+    justify-content: space-around;
+  }
+  footer { flex-direction: column; }
+}
