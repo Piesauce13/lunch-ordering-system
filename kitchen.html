@@ -25,6 +25,10 @@
             <span class="stat-value" id="pendingCount">0</span>
           </div>
           <div class="stat-item">
+            <span class="stat-label">Ready</span>
+            <span class="stat-value" id="readyCount">0</span>
+          </div>
+          <div class="stat-item">
             <span class="stat-label">Done</span>
             <span class="stat-value done" id="completedCount">0</span>
           </div>
@@ -37,9 +41,10 @@
         <h2>Orders</h2>
         <div class="panel-header">
           <select id="statusFilter">
-            <option value="pending">Pending</option>
-            <option value="completed">Done</option>
             <option value="all">All Orders</option>
+            <option value="pending">Pending</option>
+            <option value="ready">Ready</option>
+            <option value="completed">Completed</option>
           </select>
           <button id="refreshBtn" class="refresh-btn">Refresh</button>
         </div>

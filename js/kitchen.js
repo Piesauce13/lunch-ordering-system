@@ -11,6 +11,7 @@ const orderListEl = document.getElementById("orderList");
 const statusFilterSelect = document.getElementById("statusFilter");
 const refreshBtn = document.getElementById("refreshBtn");
 const pendingCountEl = document.getElementById("pendingCount");
+const readyCountEl = document.getElementById("readyCount");
 const completedCountEl = document.getElementById("completedCount");
 
 async function init() {
@@ -21,8 +22,10 @@ async function init() {
 
 function updateStats(orders) {
   const pending = orders.filter(o => o.status === "pending").length;
+  const ready = orders.filter(o => o.status === "ready").length;
   const completed = orders.filter(o => o.status === "completed").length;
   if (pendingCountEl) pendingCountEl.textContent = pending;
+  if (readyCountEl) readyCountEl.textContent = ready;
   if (completedCountEl) completedCountEl.textContent = completed;
 }
 
@@ -85,6 +88,7 @@ async function renderOrderCard(order, items) {
     : `<div class="no-notes">No special instructions</div>`;
 
   const statusActions = getStatusActions(order.status, order.id);
+  const statusLabel = { pending: "Pending", ready: "Ready", completed: "Done" }[order.status] || order.status;
 
   card.innerHTML = `
     <div class="kitchen-card-header">
@@ -95,7 +99,10 @@ async function renderOrderCard(order, items) {
       </div>
     </div>
     <div class="kitchen-card-body">
-      <div class="employee-name">${order.employeeName}</div>
+      <div class="order-meta-row">
+        <span class="employee-name">${order.employeeName}</span>
+        <span class="status-badge ${order.status}">${statusLabel}</span>
+      </div>
       <div class="order-time">
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
         ${formatDateTime(createdAt)}
@@ -122,9 +129,14 @@ function getStatusActions(status, orderId) {
   
   switch (status) {
     case "pending":
-      return `<button class="btn-complete action-btn start" ${baseAttr} data-status="completed">
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-        Mark Done
+      return `
+        <button class="btn-ready action-btn" ${baseAttr} data-status="ready">Mark Ready</button>
+        <button class="btn-done action-btn" ${baseAttr} data-status="completed">Picked Up</button>
+      `;
+    case "ready":
+      return `<button class="btn-done action-btn" ${baseAttr} data-status="completed">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+        Picked Up
       </button>`;
     default:
       return "";

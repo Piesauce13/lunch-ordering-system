@@ -374,6 +374,55 @@ button:active { transform: scale(0.98); }
   filter: brightness(1.08);
 }
 
+.order-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: auto;
+}
+
+.btn-preparing {
+  flex: 1;
+  background: var(--accent-2);
+  color: white;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.btn-ready {
+  flex: 1;
+  background: var(--success);
+  color: white;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.btn-done {
+  flex: 1;
+  background: var(--muted);
+  color: white;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.btn-ready:hover { filter: brightness(1.08); }
+.btn-preparing:hover { filter: brightness(1.08); }
+.btn-done:hover { filter: brightness(1.08); }
+
 footer {
   border-top: 1px solid var(--line);
   margin-top: 34px;
@@ -427,15 +476,46 @@ footer strong {
 
 .kitchen-card.status-ready {
   border-left: 4px solid var(--success);
+  background: linear-gradient(135deg, #f0fdf4 0%, #e6fffa 100%);
 }
 
 .kitchen-card.status-completed {
-  opacity: 0.6;
+  opacity: 0.5;
   border-left: 4px solid var(--muted);
 }
 
-.order-actions {
-  margin-top: auto;
+.stat-value.ready {
+  color: var(--success);
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-badge.pending {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.status-badge.preparing {
+  background: #fed7aa;
+  color: #c2410c;
+}
+
+.status-badge.ready {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.status-badge.completed {
+  background: #e5e7eb;
+  color: #6b7280;
 }
 
 .items-list {
@@ -459,4 +539,12 @@ footer strong {
   color: var(--muted);
   font-weight: 600;
   text-transform: uppercase;
+}
+
+.order-meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
 }
