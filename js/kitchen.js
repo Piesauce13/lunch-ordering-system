@@ -10,7 +10,7 @@ let currentFilter = "pending";
 const orderListEl = document.getElementById("orderList");
 const statusFilterSelect = document.getElementById("statusFilter");
 const refreshBtn = document.getElementById("refreshBtn");
-const activeCountEl = document.getElementById("activeCount");
+const pendingCountEl = document.getElementById("pendingCount");
 const completedCountEl = document.getElementById("completedCount");
 
 async function init() {
@@ -20,9 +20,9 @@ async function init() {
 }
 
 function updateStats(orders) {
-  const active = orders.filter(o => o.status !== "completed").length;
+  const pending = orders.filter(o => o.status === "pending").length;
   const completed = orders.filter(o => o.status === "completed").length;
-  if (activeCountEl) activeCountEl.textContent = active;
+  if (pendingCountEl) pendingCountEl.textContent = pending;
   if (completedCountEl) completedCountEl.textContent = completed;
 }
 

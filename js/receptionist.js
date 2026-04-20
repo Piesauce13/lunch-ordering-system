@@ -23,27 +23,45 @@ const submitBtn         = document.getElementById("submitBtn");
 // 1. Init — runs when page loads
 async function init() {
   showSpinner(true);
-  await loadCategories();
+  allCategories = await loadCategories();
+  if (allCategories.length > 0) {
+    const meals = await fetchMealsByCategory(allCategories[0].strCategory);
+    renderMealCards(meals);
+  }
   showSpinner(false);
 }
 
-// 2. Load categories into the dropdown
+let allCategories = [];
+
 async function loadCategories() {
   const categories = await fetchCategories();
+  allCategories = categories;
 
-  categorySelect.innerHTML = `<option value="">-- Select Category --</option>`;
+  categorySelect.innerHTML = `<option value="">All Categories</option>`;
   categories.forEach(cat => {
     const option = document.createElement("option");
     option.value = cat.strCategory;
     option.textContent = cat.strCategory;
     categorySelect.appendChild(option);
   });
+  
+  return categories;
 }
 
 // 3. When category changes, load meals for that category
 categorySelect.addEventListener("change", async () => {
   const category = categorySelect.value;
-  if (!category) return;
+  if (!category || category === "") {
+    if (allCategories.length > 0) {
+      showSpinner(true);
+      selectedMeal = null;
+      clearSelectedMealPreview();
+      const meals = await fetchMealsByCategory(allCategories[0].strCategory);
+      renderMealCards(meals);
+      showSpinner(false);
+    }
+    return;
+  }
 
   showSpinner(true);
   selectedMeal = null;

@@ -319,7 +319,12 @@
 
       if (result.success) {
         sessionStorage.setItem("currentUser", JSON.stringify(result.user));
-        window.location.href = "./receptionist.html";
+        const role = result.user.role;
+        if (role === "kitchen") {
+          window.location.href = "./kitchen.html";
+        } else {
+          window.location.href = "./receptionist.html";
+        }
       } else {
         errorMsg.textContent = result.message || "Invalid name or password.";
         loginBtn.disabled = false;

@@ -72,12 +72,59 @@
       margin-bottom: 22px;
     }
 
+    header {
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 14px;
+      margin-bottom: 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
     header h1 {
       font-family: Georgia, "Times New Roman", serif;
       font-weight: 700;
       font-size: 2rem;
       line-height: 1;
       color: #3e5139;
+    }
+
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .nav-link {
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 8px 16px;
+      border-radius: 8px;
+      background: var(--surface);
+      transition: background 0.2s;
+    }
+
+    .nav-link:hover {
+      background: var(--line);
+    }
+
+    .nav-btn {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--line);
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+    }
+
+    .nav-btn:hover {
+      background: var(--error);
+      color: white;
+      border-color: var(--error);
     }
 
     header span {
@@ -485,8 +532,14 @@
 <body>
   <div class="page">
     <header>
-      <h1>Lunch Queue</h1>
-      <span>Receptionist Panel</span>
+      <div>
+        <h1>Lunch Queue</h1>
+        <span>Receptionist Panel</span>
+      </div>
+      <nav class="header-nav">
+        <a href="./kitchen.html" class="nav-link">Kitchen View</a>
+        <button id="logoutBtn" class="nav-btn">Logout</button>
+      </nav>
     </header>
 
     <div class="layout">
@@ -561,6 +614,13 @@
 
   <div id="toast"></div>
   <div id="spinner"><div class="spinner-ring"></div></div>
+  <script type="module">
+    import firebaseService from "./Firebase/CRUD.js";
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      sessionStorage.removeItem("currentUser");
+      window.location.href = "./index.html";
+    });
+  </script>
   <script type="module" src="js/receptionist.js"></script>
 
 </body>
