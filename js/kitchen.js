@@ -158,6 +158,7 @@ async function updateOrderStatus(orderId, newStatus) {
 }
 
 if (statusFilterSelect) {
+  statusFilterSelect.value = "pending";
   statusFilterSelect.addEventListener("change", (e) => {
     applyFilter(e.target.value);
   });
