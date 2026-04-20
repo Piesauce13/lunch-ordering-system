@@ -131,10 +131,35 @@ header span.subtitle {
   font-family: Georgia, "Times New Roman", serif;
   font-size: 2rem;
   color: #485f42;
-  margin-bottom: 24px;
   position: relative;
   display: inline-block;
   line-height: 1;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.panel-header select {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.refresh-btn {
+  padding: 8px 16px;
+  background: var(--accent);
+  color: white;
+  border-radius: 8px;
+  font-size: 0.85rem;
 }
 
 .panel h2::after {
@@ -345,4 +370,49 @@ footer strong {
     justify-content: space-around;
   }
   footer { flex-direction: column; }
+}
+
+/* Order Card Status Styles */
+.kitchen-card.status-pending {
+  border-left: 4px solid var(--info);
+}
+
+.kitchen-card.status-preparing {
+  border-left: 4px solid var(--accent-2);
+}
+
+.kitchen-card.status-ready {
+  border-left: 4px solid var(--success);
+}
+
+.kitchen-card.status-completed {
+  opacity: 0.6;
+  border-left: 4px solid var(--muted);
+}
+
+.order-actions {
+  margin-top: auto;
+}
+
+.items-list {
+  margin-bottom: 12px;
+}
+
+.item-row {
+  display: flex;
+  gap: 8px;
+  font-size: 0.9rem;
+  padding: 4px 0;
+}
+
+.item-qty {
+  font-weight: bold;
+  color: var(--accent-2);
+}
+
+.order-number {
+  font-size: 0.75rem;
+  color: var(--muted);
+  font-weight: 600;
+  text-transform: uppercase;
 }

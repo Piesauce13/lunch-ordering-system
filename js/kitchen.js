@@ -10,11 +10,20 @@ let currentFilter = "pending";
 const orderListEl = document.getElementById("orderList");
 const statusFilterSelect = document.getElementById("statusFilter");
 const refreshBtn = document.getElementById("refreshBtn");
+const activeCountEl = document.getElementById("activeCount");
+const completedCountEl = document.getElementById("completedCount");
 
 async function init() {
   showSpinner(true);
   await loadOrders();
   showSpinner(false);
+}
+
+function updateStats(orders) {
+  const active = orders.filter(o => o.status !== "completed").length;
+  const completed = orders.filter(o => o.status === "completed").length;
+  if (activeCountEl) activeCountEl.textContent = active;
+  if (completedCountEl) completedCountEl.textContent = completed;
 }
 
 async function loadOrders() {
@@ -25,6 +34,7 @@ async function loadOrders() {
       const dateB = b.created_at?.toDate?.() || new Date(b.created_at);
       return dateB - dateA;
     });
+    updateStats(allOrders);
     applyFilter(currentFilter);
   } catch (err) {
     console.error("Failed to load orders:", err);
@@ -57,31 +67,43 @@ async function renderOrders(orders) {
 
 async function renderOrderCard(order, items) {
   const card = document.createElement("div");
-  card.className = `order-card status-${order.status}`;
+  card.className = `kitchen-card status-${order.status}`;
 
   const createdAt = order.created_at?.toDate?.() || new Date(order.created_at);
+  const firstItem = items[0] || {};
+  const totalQty = items.reduce((sum, item) => sum + (item.quantity || 1), 0);
   
-  const itemsHtml = items.map(item => `
-    <li>
+  const itemsList = items.map(item => `
+    <div class="item-row">
       <span class="item-qty">${item.quantity}x</span>
       <span class="item-name">${item.mealName}</span>
-    </li>
+    </div>
   `).join("");
+
+  const notesHtml = order.notes 
+    ? `<div class="special-notes"><strong>Special Notes</strong>${order.notes}</div>`
+    : `<div class="no-notes">No special instructions</div>`;
 
   const statusActions = getStatusActions(order.status, order.id);
 
   card.innerHTML = `
-    <div class="order-header">
-      <span class="order-number">${order.orderNumber}</span>
-      <span class="order-status">${order.status}</span>
+    <div class="kitchen-card-header">
+      <img src="${firstItem.mealThumb || ''}/preview" alt="${firstItem.mealName || 'Meal'}" class="kitchen-card-img" />
+      <div class="kitchen-card-info">
+        <div class="kitchen-card-title">${firstItem.mealName || 'Unknown Meal'}</div>
+        <span class="qty-badge">Qty: ${totalQty}</span>
+      </div>
     </div>
-    <div class="order-meta">
-      <span class="employee-name">${order.employeeName}</span>
-      <span class="order-time">${formatDateTime(createdAt)}</span>
+    <div class="kitchen-card-body">
+      <div class="employee-name">${order.employeeName}</div>
+      <div class="order-time">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+        ${formatDateTime(createdAt)}
+      </div>
+      ${items.length > 1 ? `<div class="items-list">${itemsList}</div>` : ''}
+      ${notesHtml}
+      <div class="order-actions">${statusActions}</div>
     </div>
-    <ul class="order-items">${itemsHtml}</ul>
-    ${order.notes ? `<div class="order-notes">Note: ${order.notes}</div>` : ""}
-    <div class="order-actions">${statusActions}</div>
   `;
 
   card.querySelectorAll(".action-btn").forEach(btn => {
@@ -100,11 +122,10 @@ function getStatusActions(status, orderId) {
   
   switch (status) {
     case "pending":
-      return `<button class="action-btn start" ${baseAttr} data-status="preparing">Start Cooking</button>`;
-    case "preparing":
-      return `<button class="action-btn ready" ${baseAttr} data-status="ready">Mark Ready</button>`;
-    case "ready":
-      return `<button class="action-btn complete" ${baseAttr} data-status="completed">Complete</button>`;
+      return `<button class="btn-complete action-btn start" ${baseAttr} data-status="completed">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+        Mark Done
+      </button>`;
     default:
       return "";
   }

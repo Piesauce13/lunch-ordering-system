@@ -28,98 +28,17 @@
 
     <main>
       <section class="panel">
-        <h2>Active Queue</h2>
-
-        <div class="order-grid" id="orderGrid">
-          
-          <!-- Card 1 (With Special Notes) -->
-          <div class="kitchen-card">
-            <div class="kitchen-card-header">
-              <img src="https://images.unsplash.com/photo-1620019989479-d52fcedd99fe?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmcmVzaCUyMHNhbGFkJTIwYm93bHxlbnwxfHx8fDE3NzY2MTY4NDF8MA&ixlib=rb-4.1.0&q=80&w=1080" alt="Fresh Harvest Salad Bowl" class="kitchen-card-img" />
-              <div class="kitchen-card-info">
-                <div class="kitchen-card-title">Fresh Harvest Salad Bowl</div>
-                <span class="qty-badge">Qty: 1</span>
-              </div>
-            </div>
-            
-            <div class="kitchen-card-body">
-              <div class="employee-name">Sarah Jenkins</div>
-              <div class="order-time">
-                <!-- SVG Clock Icon -->
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                Ordered at 10:15 AM
-              </div>
-              
-              <div class="special-notes">
-                <strong>Special Notes</strong>
-                No onions, extra dressing on the side please.
-              </div>
-              
-              <button class="btn-complete" onclick="this.closest('.kitchen-card').style.display='none'">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                Complete Order
-              </button>
-            </div>
-          </div>
-
-          <!-- Card 2 (High Quantity) -->
-          <div class="kitchen-card">
-            <div class="kitchen-card-header">
-              <img src="https://images.unsplash.com/photo-1593996470434-890a14b11a6a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwYXN0YSUyMG1lYWx8ZW58MXx8fHwxNzc2NjM0Njg4fDA&ixlib=rb-4.1.0&q=80&w=1080" alt="Spicy Arrabiata Penne" class="kitchen-card-img" />
-              <div class="kitchen-card-info">
-                <div class="kitchen-card-title">Spicy Arrabiata Penne</div>
-                <span class="qty-badge">Qty: 3</span>
-              </div>
-            </div>
-            
-            <div class="kitchen-card-body">
-              <div class="employee-name">Michael Chen (Team Lunch)</div>
-              <div class="order-time">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                Ordered at 10:22 AM
-              </div>
-              
-              <div class="special-notes">
-                <strong>Special Notes</strong>
-                Very spicy! Add extra chili flakes if possible.
-              </div>
-              
-              <button class="btn-complete" onclick="this.closest('.kitchen-card').style.display='none'">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                Complete Order
-              </button>
-            </div>
-          </div>
-
-          <!-- Card 3 (No Notes) -->
-          <div class="kitchen-card">
-            <div class="kitchen-card-header">
-              <img src="https://images.unsplash.com/photo-1665233272941-ae681d11fc06?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjbHViJTIwc2FuZHdpY2h8ZW58MXx8fHwxNzc2NjM0Njg4fDA&ixlib=rb-4.1.0&q=80&w=1080" alt="Classic Club Sandwich" class="kitchen-card-img" />
-              <div class="kitchen-card-info">
-                <div class="kitchen-card-title">Classic Club Sandwich</div>
-                <span class="qty-badge">Qty: 1</span>
-              </div>
-            </div>
-            
-            <div class="kitchen-card-body">
-              <div class="employee-name">David Miller</div>
-              <div class="order-time">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                Ordered at 10:35 AM
-              </div>
-              
-              <div class="no-notes">
-                No special instructions
-              </div>
-              
-              <button class="btn-complete" onclick="this.closest('.kitchen-card').style.display='none'">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                Complete Order
-              </button>
-            </div>
-          </div>
-
+        <div class="panel-header">
+          <h2>Active Queue</h2>
+          <select id="statusFilter">
+            <option value="pending">Pending</option>
+            <option value="completed">Done</option>
+            <option value="all">All Orders</option>
+          </select>
+          <button id="refreshBtn" class="refresh-btn">Refresh</button>
         </div>
+
+        <div class="order-grid" id="orderList"></div>
       </section>
     </main>
 
