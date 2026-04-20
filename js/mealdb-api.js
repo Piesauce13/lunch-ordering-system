@@ -1,25 +1,24 @@
 // Base URL 
 const MEALDB_BASE = "https://www.themealdb.com/api/json/v1/1";
 
-// Fetch all categories
+// Fetch preferred categories
 export async function fetchCategories() {
-  try {
-    const res = await fetch(`${MEALDB_BASE}/categories.php`);
-    const data = await res.json();
-    return data.categories || [];
-  } catch (err) {
-    console.error("fetchCategories error:", err);
-    return [];
-  }
+  return [
+    { strCategory: "Pasta" },
+    { strCategory: "Side" },
+    { strCategory: "Vegetarian" },
+    { strCategory: "Beef" },
+    { strCategory: "Chicken" },
+    { strCategory: "Dessert" },
+  ];
 }
-
 
 // Fetch meals list by category 
 export async function fetchMealsByCategory(category) {
   try {
     const res = await fetch(`${MEALDB_BASE}/filter.php?c=${encodeURIComponent(category)}`);
     const data = await res.json();
-    return data.meals || [];
+    return (data.meals || []).slice(0, 6); // ← limit to 5
   } catch (err) {
     console.error("fetchMealsByCategory error:", err);
     return [];

@@ -20,7 +20,7 @@ const selectedMealName  = document.getElementById("selectedMealName");
 const selectedMealImg   = document.getElementById("selectedMealImg");
 const submitBtn         = document.getElementById("submitBtn");
 
-// 1. Init — runs when page loads
+// 1. Init
 async function init() {
   showSpinner(true);
   allCategories = await loadCategories();
@@ -31,6 +31,7 @@ async function init() {
   showSpinner(false);
 }
 
+// 2. Load categories into the dropdown
 let allCategories = [];
 
 async function loadCategories() {
