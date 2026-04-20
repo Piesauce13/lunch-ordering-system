@@ -130,7 +130,7 @@ async function selectMeal(mealId, cardEl) {
 // 7. Clear the meal preview
 function clearSelectedMealPreview() {
   if (selectedMealName) selectedMealName.textContent = "None";
-  if (selectedMealImg)  selectedMealImg.src = "";
+  if (selectedMealImg)  selectedMealImg.src = "https://img.icons8.com/ios7/1200/meal.jpg";
   document.querySelectorAll(".meal-card").forEach(c => c.classList.remove("selected"));
 }
 
