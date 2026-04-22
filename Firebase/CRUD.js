@@ -1,4 +1,4 @@
-import db from "./firebase_config.js";
+import db from "./firebase-config.js";
 import {
     doc, collection, addDoc, getDocs,
     updateDoc, deleteDoc, query, where
@@ -34,47 +34,6 @@ const login = async (name, password) => {
         return { success: false };
     }
 };
-
-
-/* ================= MEALS ================= */
-
-const createMeal = async (meal) => {
-    try {
-        const docRef = await addDoc(collection(db, "meals"), meal);
-        return docRef.id;
-    } catch (e) {
-        console.error("Error creating meal:", e);
-    }
-};
-
-const getMeals = async () => {
-    try {
-        const snapshot = await getDocs(collection(db, "meals"));
-        return snapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
-        }));
-    } catch (e) {
-        console.error("Error fetching meals:", e);
-    }
-};
-
-const updateMeal = async (id, data) => {
-    try {
-        await updateDoc(doc(db, "meals", id), data);
-    } catch (e) {
-        console.error("Error updating meal:", e);
-    }
-};
-
-const deleteMeal = async (id) => {
-    try {
-        await deleteDoc(doc(db, "meals", id));
-    } catch (e) {
-        console.error("Error deleting meal:", e);
-    }
-};
-
 
 /* ================= ORDERS ================= */
 
@@ -171,12 +130,6 @@ const deleteOrderItem = async (id) => {
 export default {
     // Auth
     login,
-
-    // Meals
-    createMeal,
-    getMeals,
-    updateMeal,
-    deleteMeal,
 
     // Orders
     createOrder,
