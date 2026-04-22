@@ -454,9 +454,24 @@ button:active { transform: scale(0.98); }
   gap: 6px;
 }
 
+.btn-cancelled {
+  background: #ef4444;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
 .btn-ready:hover { filter: brightness(1.08); }
 .btn-preparing:hover { filter: brightness(1.08); }
 .btn-done:hover { filter: brightness(1.08); }
+.btn-cancelled:hover { filter: brightness(1.08); }
 
 footer {
   border-top: 1px solid var(--line);

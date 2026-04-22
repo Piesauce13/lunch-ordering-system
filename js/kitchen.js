@@ -13,6 +13,7 @@ const refreshBtn = document.getElementById("refreshBtn");
 const pendingCountEl = document.getElementById("pendingCount");
 const readyCountEl = document.getElementById("readyCount");
 const completedCountEl = document.getElementById("completedCount");
+const cancelledCountEl = document.getElementById("cancelledCount");
 
 async function init() {
   showSpinner(true);
@@ -24,9 +25,11 @@ function updateStats(orders) {
   const pending = orders.filter(o => o.status === "pending").length;
   const ready = orders.filter(o => o.status === "ready").length;
   const completed = orders.filter(o => o.status === "completed").length;
+  const cancelled = orders.filter(o => o.status === "cancelled").length;
   if (pendingCountEl) pendingCountEl.textContent = pending;
   if (readyCountEl) readyCountEl.textContent = ready;
   if (completedCountEl) completedCountEl.textContent = completed;
+  if (cancelledCountEl) cancelledCountEl.textContent = cancelled;
 }
 
 async function loadOrders() {
@@ -88,7 +91,7 @@ async function renderOrderCard(order, items) {
     : `<div class="no-notes">No special instructions</div>`;
 
   const statusActions = getStatusActions(order.status, order.id);
-  const statusLabel = { pending: "Pending", ready: "Ready", completed: "Done" }[order.status] || order.status;
+  const statusLabel = { pending: "Pending", ready: "Ready", completed: "Done", cancelled: "Cancelled" }[order.status] || order.status;
 
   card.innerHTML = `
     <div class="kitchen-card-header">
@@ -118,6 +121,12 @@ async function renderOrderCard(order, items) {
       const newStatus = e.target.dataset.status;
       const orderId = e.target.dataset.orderId;
       await updateOrderStatus(orderId, newStatus);
+
+      if (newStatus === "cancel") {
+      await deleteOrder(orderId);  // ← add this
+    } else {
+      await updateOrderStatus(orderId, newStatus);
+    }
     });
   });
 
@@ -132,14 +141,18 @@ function getStatusActions(status, orderId) {
       return `
         <button class="btn-ready action-btn" ${baseAttr} data-status="ready">Mark Ready</button>
         <button class="btn-done action-btn" ${baseAttr} data-status="completed">Picked Up</button>
+        <button class="btn-cancelled action-btn" ${baseAttr} data-status="cancelled">Cancel Order</button>
       `;
     case "ready":
       return `<button class="btn-done action-btn" ${baseAttr} data-status="completed">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
         Picked Up
       </button>`;
-    default:
-      return "";
+    case "cancelled":
+      return `<button class="btn-cancelled" disabled>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        Order Cancelled
+      </button>`;
   }
 }
 
@@ -170,6 +183,21 @@ if (refreshBtn) {
     await loadOrders();
     showSpinner(false);
   });
+}
+
+async function deleteOrder(orderId) {
+  if (!confirm("Cancel this order?")) return;
+  showSpinner(true);
+  try {
+    await firebaseService.deleteOrder(orderId);
+    showToast("Order cancelled.", "info");
+    await loadOrders();
+  } catch (err) {
+    console.error("Failed to cancel order:", err);
+    showToast("Failed to cancel order.", "error");
+  } finally {
+    showSpinner(false);
+  }
 }
 
 document.addEventListener("DOMContentLoaded", init);
