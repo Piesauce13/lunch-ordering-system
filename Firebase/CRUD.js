@@ -1,7 +1,7 @@
 import db from "./firebase-config.js";
 import {
     doc, collection, addDoc, getDocs,
-    updateDoc, deleteDoc, query, where
+    updateDoc, deleteDoc, query, where, onSnapshot
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 /* ================= AUTH (SIMPLE LOGIN) ================= */
@@ -125,6 +125,20 @@ const deleteOrderItem = async (id) => {
 };
 
 
+/* ================= REALTIME LISTENERS ================= */
+
+// Calls callback(orders[]) immediately and on every change.
+// Returns an unsubscribe function — call it to stop listening.
+const subscribeToOrders = (callback) => {
+    return onSnapshot(collection(db, "orders"), (snapshot) => {
+        const orders = snapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+        }));
+        callback(orders);
+    });
+};
+
 /* ================= EXPORT ================= */
 
 export default {
@@ -141,5 +155,8 @@ export default {
     createOrderItem,
     getOrderItemsByOrder,
     updateOrderItem,
-    deleteOrderItem
+    deleteOrderItem,
+
+    // Realtime
+    subscribeToOrders
 };

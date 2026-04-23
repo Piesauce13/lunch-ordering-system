@@ -6,6 +6,7 @@ if (!currentUser) window.location.href = "../index.html";
 
 let allOrders = [];
 let currentFilter = "pending";
+let unsubscribeOrders = null;
 
 const orderListEl = document.getElementById("orderList");
 const statusFilterSelect = document.getElementById("statusFilter");
@@ -17,8 +18,17 @@ const cancelledCountEl = document.getElementById("cancelledCount");
 
 async function init() {
   showSpinner(true);
-  await loadOrders();
-  showSpinner(false);
+
+  unsubscribeOrders = firebaseService.subscribeToOrders(async (orders) => {
+    allOrders = orders.sort((a, b) => {
+      const dateA = a.created_at?.toDate?.() || new Date(a.created_at);
+      const dateB = b.created_at?.toDate?.() || new Date(b.created_at);
+      return dateB - dateA;
+    });
+    updateStats(allOrders);
+    applyFilter(currentFilter);
+    showSpinner(false);
+  });
 }
 
 function updateStats(orders) {
@@ -160,12 +170,9 @@ async function updateOrderStatus(orderId, newStatus) {
   showSpinner(true);
   try {
     await firebaseService.updateOrder(orderId, { status: newStatus });
-    //showToast(`Order marked as ${newStatus}`, "success");
-    await loadOrders();
   } catch (err) {
     console.error("Failed to update order:", err);
     showToast("Failed to update order", "error");
-  } finally {
     showSpinner(false);
   }
 }
@@ -190,14 +197,15 @@ async function deleteOrder(orderId) {
   showSpinner(true);
   try {
     await firebaseService.deleteOrder(orderId);
-    // showToast("Order cancelled.", "info");
-    await loadOrders();
   } catch (err) {
     console.error("Failed to cancel order:", err);
     showToast("Failed to cancel order.", "error");
-  } finally {
     showSpinner(false);
   }
 }
+
+window.addEventListener("beforeunload", () => {
+  if (unsubscribeOrders) unsubscribeOrders();
+});
 
 document.addEventListener("DOMContentLoaded", init);
