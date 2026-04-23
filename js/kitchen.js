@@ -160,7 +160,7 @@ async function updateOrderStatus(orderId, newStatus) {
   showSpinner(true);
   try {
     await firebaseService.updateOrder(orderId, { status: newStatus });
-    showToast(`Order marked as ${newStatus}`, "success");
+    //showToast(`Order marked as ${newStatus}`, "success");
     await loadOrders();
   } catch (err) {
     console.error("Failed to update order:", err);
@@ -190,7 +190,7 @@ async function deleteOrder(orderId) {
   showSpinner(true);
   try {
     await firebaseService.deleteOrder(orderId);
-    showToast("Order cancelled.", "info");
+    // showToast("Order cancelled.", "info");
     await loadOrders();
   } catch (err) {
     console.error("Failed to cancel order:", err);
